@@ -268,7 +268,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
 
     def add_app(self, app, top_win):
         # add language specific mappings
-        self.lang_mapping = { 'cn_wxApp': self.cn('wxApp'), 'cn_wxIDANY': self.cn('wxID_ANY'), 'import_gettext': ''}
+        self.lang_mapping = { 'cn_wxApp': self.cn('WxAsyncApp'), 'cn_wxIDANY': self.cn('wxID_ANY'), 'import_gettext': ''}
 
         # Add gettext import statements
         if self._use_gettext:
