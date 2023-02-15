@@ -28,7 +28,7 @@ class EventsProperty(np.GridProperty):
                "You can do so in your own source that you derive from the\n"
                "wxGlade generated code or within wxGlade on the 'Code' tab.")
     validation_res = [re.compile(r'^([a-zA-Z_][a-zA-Z0-9_\.]*\.)?EVT_[A-Z0-9_]+$'),  # XXX avoid ..
-                      re.compile(r'^(([a-zA-Z_]+[a-zA-Z0-9_-]*)|()|(lambda .*))$')]
+                      re.compile(r'^(((?:async +)?[a-zA-Z_]+[a-zA-Z0-9_-]*)|()|(lambda .*))$')]
     EDITABLE_COLS = [0,1]
     UPPERCASE_COLS = [None,None]
     SKIP_EMPTY = True

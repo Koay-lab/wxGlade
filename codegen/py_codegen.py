@@ -265,6 +265,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
         if self.preview and compat.PYTHON2:
             self.header_lines.append('from __future__ import print_function\n')
         self.header_lines.append('import wx\n')
+        self.header_lines.append('from wxasync import WxAsyncApp, AsyncBind\n')
 
     def add_app(self, app, top_win):
         # add language specific mappings
@@ -381,13 +382,26 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
             else:
                 obj_name_id = self.format_generic_access(obj)  # e.g. 'self.button_1' or 'self' for toplevels
 
+            match = re.search("^async +(.+)$", handler)
+            if match:
+                asynchronous = True
+                handler = match.group(1)
+            else:
+                asynchronous = False
+
             if not handler.startswith("lambda "):
                 handler = 'self.%s'%handler
 
-            if 'EVT_NAVIGATION_KEY' in event:
-                tmpl = '%(tab)sself.Bind(%(event)s, %(handler)s)\n'
+            if asynchronous:
+                if 'EVT_NAVIGATION_KEY' in event:
+                    tmpl = '%(tab)sAsyncBind(%(event)s, %(handler)s, self)\n'
+                else:
+                    tmpl = '%(tab)sAsyncBind(%(event)s, %(handler)s, %(obj_name_id)s)\n'
             else:
-                tmpl = '%(tab)s%(obj_name_id)s.Bind(%(event)s, %(handler)s)\n'
+                if 'EVT_NAVIGATION_KEY' in event:
+                    tmpl = '%(tab)sself.Bind(%(event)s, %(handler)s)\n'
+                else:
+                    tmpl = '%(tab)s%(obj_name_id)s.Bind(%(event)s, %(handler)s)\n'
 
             lines = [tmpl % {'tab':tab, 'event':self.cn(event), 'handler':handler, 'obj_name_id':obj_name_id}]
 
@@ -408,7 +422,8 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
         # Python has two indentation levels
         #  1st) for function declaration
         #  2nd) for function body
-        stub = [self.tabs(1), "def %(handler)s(self, event):"]
+
+        stub = [self.tabs(1), "%(prefix)sdef %(handler)s(self, event):"]
         if self._mark_blocks: stub.append("  # wxGlade: %(klass)s.<event_handler>")
         stub.append( """\n%(tab)sprint("Event handler '%(handler)s' not implemented!")\n""" )
         stub.append( '%(tab)sevent.Skip()\n' )

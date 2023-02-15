@@ -907,10 +907,17 @@ class BaseLangCodeWriter(wcodegen.BaseCodeWriter):
             if handler in already_there:
                 continue
 
+            match = re.search("^(\w+) +(.+)$", handler)
+            if match:
+                prefix = match.group(1) + " "
+                handler = match.group(2)
+            else:
+                prefix = ""
+
             # add an empty line for;  TODO: Remove later
             if self.language in ('python', 'lisp') and not (prev_src and not is_new):
                 write('\n')
-            write(self.tmpl_func_event_stub % {'tab': tab, 'klass': self.cn_class(code_obj.klass), 'handler': handler })
+            write(self.tmpl_func_event_stub % {'tab': tab, 'klass': self.cn_class(code_obj.klass), 'handler': handler, 'prefix': prefix})
             already_there.add( handler )
 
         return code_lines
