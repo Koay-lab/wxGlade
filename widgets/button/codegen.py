@@ -12,7 +12,7 @@ import wcodegen
 
 class PythonButtonGenerator(wcodegen.PythonWidgetCodeWriter):
 
-    tmpl = '%(name)s = %(klass)s(%(parent)s, %(id)s, %(label)s%(style)s)\n'
+    tmpl = '%(name)s = %(klass)s(%(parent)s, %(id)s, label=%(label)s%(style)s)\n'
 
     def _prepare_tmpl_content(self, obj):
         wcodegen.PythonWidgetCodeWriter._prepare_tmpl_content(self, obj)
