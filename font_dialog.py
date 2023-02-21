@@ -34,7 +34,7 @@ class wxGladeFontDialog(wx.Dialog):
         self.label_2_copy = wx.StaticText(self, -1, _("Family:"))
         self.label_3_copy = wx.StaticText(self, -1, _("Style:"))
         self.label_4_copy = wx.StaticText(self, -1, _("Weight:"))
-        self.family = wx.Choice(self, -1, choices=["Default", "Decorative", "Roman", "Script", "Swiss", "Modern"])
+        self.family = wx.Choice(self, -1, choices=["Default", "Decorative", "Roman", "Script", "Swiss", "Modern", "Teletype"])
         self.style = wx.Choice(self, -1, choices=["Normal", "Slant", "Italic"])
         self.weight = wx.Choice(self, -1, choices=["Normal", "Light", "Bold"])
         self.label_1 = wx.StaticText(self, -1, _("Size in points:"))

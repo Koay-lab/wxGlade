@@ -289,6 +289,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
         mycn = getattr(builder, 'cn', self.cn)
         mycn_f = getattr(builder, 'cn_f', self.cn_f)
         fmt_klass = self.cn_class( code_obj.get_prop_value("class", code_obj.WX_CLASS) )
+        needs_parent = code_obj.WX_CLASS.endswith("Dialog")
 
         # custom base classes support
         custom_base = None
@@ -300,7 +301,10 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
             base = mycn(code_obj.WX_CLASS)
             if custom_base: base = ", ".join([b.strip() for b in custom_base.split(',')])
             write('\nclass %s(%s):\n' % (self.get_class(fmt_klass), base))
-            write(self.tabs(1) + 'def __init__(self, *args, **kwds):\n')
+            if needs_parent:
+                write(self.tabs(1) + 'def __init__(self, parent, *args, **kwds):\n')
+            else:
+                write(self.tabs(1) + 'def __init__(self, *args, **kwds):\n')
         elif custom_base:
             # custom base classes set, but "overwrite existing sources" not set. Issue a warning about this
             self.warning( '%s has custom base classes, but you are not overwriting '
@@ -332,8 +336,11 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
                     write(tab + '%s.__init__(self, *args, **kwds)\n' % b)
                 else:
                     write(tab + '%s.__init__(self)\n' % b)
+        elif needs_parent:
+            write(tab + 'super().__init__(parent, *args, **kwds)\n')
         else:
-            write(tab + '%s.__init__(self, *args, **kwds)\n' % mycn(code_obj.WX_CLASS))
+            write(tab + 'super().__init__(*args, **kwds)\n')
+            # write(tab + '%s.__init__(self, *args, **kwds)\n' % mycn(code_obj.WX_CLASS))
 
         # set size here to avoid problems with splitter windows
         if code_obj.check_prop('size'):
