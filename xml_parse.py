@@ -671,12 +671,16 @@ class XmlWidgetObject(object):
         if name == 'pos':  # sanity check, this shouldn't happen...
             logging.debug('add_property(name=pos)')
             return
+        # if name == 'property':  # SAK: not sure why this should trigger an error
+        #     logging.debug(f'add_property(name={name})')
+        #     return
+
         try:
             prop = self.obj.properties[name]
         except KeyError:
             # unknown property for this object; issue a warning and ignore the property
-            if config.debugging: raise
-            logging.error( _("WARNING: Property '%s' not supported by this object ('%s') "), name, self.obj )
+            if config.debugging:
+                raise logging.error( _("WARNING: Property '%s' not supported by this object ('%s') "), name, self.obj )
             return
         prop.load(val, activate=True)
         self._properties_added.append(name)
