@@ -396,7 +396,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
             else:
                 asynchronous = False
 
-            if not handler.startswith("lambda "):
+            if not handler.startswith("lambda ") and "." not in handler:
                 handler = 'self.%s'%handler
 
             if asynchronous:
@@ -436,7 +436,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
         stub.append( '%(tab)sevent.Skip()\n' )
         self.tmpl_func_event_stub = "".join(stub)
 
-        event_handlers = [handler for handler in event_handlers if not handler[2].startswith("lambda ")]
+        event_handlers = [handler for handler in event_handlers if not handler[2].startswith("lambda ") and not "." in handler[2]]
         return BaseLangCodeWriter.generate_code_event_handler( self, code_obj, is_new, tab, prev_src, event_handlers )
 
     def generate_code_id(self, obj, id=None):

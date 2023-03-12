@@ -50,6 +50,7 @@ config = {
                    'wxMAXIMIZE', 'wxMAXIMIZE_BOX', 'wxSTAY_ON_TOP',
                    'wxSYSTEM_MENU',
                    'wxSIMPLE_BORDER', 'wxBORDER_SIMPLE', 'wxRESIZE_BORDER',
+                   'wxBORDER_THEME',
                    'wxFRAME_TOOL_WINDOW', 'wxFRAME_NO_TASKBAR',
                    'wxFRAME_FLOAT_ON_PARENT', 'wxNO_BORDER',
                    'wxFULL_REPAINT_ON_RESIZE',

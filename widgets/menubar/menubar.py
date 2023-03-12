@@ -31,7 +31,7 @@ class MenuItemDialog(_MenuItemDialog):
     separator_item = (None,"---","---","---","---","---","---")
 
     name_re = re.compile(r'^[a-zA-Z_]+[\w-]*(\[\w*\])*$')
-    handler_re = re.compile(r'^(([a-zA-Z_]+[a-zA-Z0-9_-]*)|()|(lambda .*))$')
+    handler_re = re.compile(r'^((?:async +)?([a-zA-Z_]+[a-zA-Z0-9._-]*)|()|(lambda .*))$')
 
     def __init__(self, parent, owner, items=None):
         _MenuItemDialog.__init__(self, parent)

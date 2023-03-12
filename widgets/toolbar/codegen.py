@@ -7,6 +7,7 @@ Code generator functions for wxToolBar objects
 @license: MIT (see LICENSE.txt) - THIS PROGRAM COMES WITH NO WARRANTY
 """
 
+import re
 import common, compat
 import wcodegen
 from .tool import *
@@ -83,8 +84,13 @@ class PythonCodeGenerator(wcodegen.PythonWidgetCodeWriter):
                              bmp1, bmp2, self.cn(kind),
                              self.codegen.quote_str(tool.short_help), self.codegen.quote_str(tool.long_help)) )
                 if tool.handler:
-                    handler = tool.handler if "." in tool.handler else "self.%s"%tool.handler
-                    out.append( "self.Bind(wx.EVT_TOOL, %s, id=%s)\n"%(handler, id_access) )
+                    match = re.search("^async +(.+)$", tool.handler)
+                    if match:
+                        handler = match.group(1) if "." in match.group(1) else "self.%s"%match.group(1)
+                        out.append( "AsyncBind(wx.EVT_TOOL, %s, self, id=%s)\n"%(handler, id_access) )
+                    else:
+                        handler = tool.handler if "." in tool.handler else "self.%s"%tool.handler
+                        out.append( "self.Bind(wx.EVT_TOOL, %s, id=%s)\n"%(handler, id_access) )
 
         return ids + out
 

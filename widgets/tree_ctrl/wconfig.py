@@ -97,6 +97,7 @@ config = {
                    'wxSTATIC_BORDER', 'wxBORDER_STATIC',
                    'wxDOUBLE_BORDER', 'wxBORDER_DOUBLE',
                    'wxNO_BORDER',     'wxBORDER_NONE',
+                   'wxBORDER_THEME',
                    'wxWANTS_CHARS',
                    'wxFULL_REPAINT_ON_RESIZE'],
     'events': {
