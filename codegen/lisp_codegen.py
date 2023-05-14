@@ -384,7 +384,7 @@ class LispCodeWriter(BaseLangCodeWriter, wcodegen.LispMixin):
             write(tab + l)
 
         if code_obj.check_prop_truth('extraproperties'):
-            for l in builder.generate_code_extraproperties(code_obj):
+            for l in self.generate_code_extraproperties(code_obj):
                 write(tab + l)
 
         # the initial and final code for the contained elements
@@ -425,9 +425,9 @@ class LispCodeWriter(BaseLangCodeWriter, wcodegen.LispMixin):
 
         return code_lines
 
-    def generate_code_font(self, obj):
+    def generate_code_font(self, obj, prop_name="font", method=None):
         self.dependencies.add( '(use-package :wxFont)' )
-        return BaseLangCodeWriter.generate_code_font(self, obj)
+        return BaseLangCodeWriter.generate_code_font(self, obj, prop_name, method)
 
     def generate_code_foreground(self, obj):
         self.dependencies.add( '(use-package :wxColour)' )
