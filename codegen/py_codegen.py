@@ -12,6 +12,7 @@ import os, os.path, random, re
 from codegen import BaseLangCodeWriter, BaseSourceFileContent
 import wcodegen
 import compat
+import functools
 
 
 class SourceFileContent(BaseSourceFileContent):
@@ -291,6 +292,14 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
         fmt_klass = self.cn_class( code_obj.get_prop_value("class", code_obj.WX_CLASS) )
         needs_parent = code_obj.WX_CLASS.endswith("Dialog")
 
+        specials = []
+        for prop in ["name", "class", "instance_class", "custom_base", "id"]:
+            if self._check_code_prop(code_obj, prop):
+                specials.append(("`" + prop + "`", code_obj.properties[prop].get_string_value()))
+
+        def replace_specials(line):
+            return functools.reduce(lambda s, r: s.replace(*r), specials, line)
+
         # custom base classes support
         custom_base = None
         if code_obj.check_prop_nodefault('custom_base') and not self.preview:
@@ -318,7 +327,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
         # the optional initial code from the code properties
         if self._check_code_prop(code_obj, "extracode_pre"):
             for l in code_obj.properties["extracode_pre"].get_lines():
-                write(tab + l)
+                write(tab + replace_specials(l))
 
         style_p = code_obj.properties.get("style")
         if style_p:
@@ -353,7 +362,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
 
         if self._check_code_prop(code_obj, "extraproperties"):
             for l in self.generate_code_extraproperties(code_obj):
-                write(tab + l)
+                write(tab + replace_specials(l))
 
         # the initial and final code for the contained elements
         for l in self.classes[code_obj].init:
@@ -373,7 +382,7 @@ from %(top_win_module)s import %(top_win_class)s\n\n"""
         # the optional final code from the code properties
         if self._check_code_prop(code_obj, "extracode_post"):
             for l in code_obj.properties["extracode_post"].get_lines():
-                write(tab + l)
+                write(tab + replace_specials(l))
 
         return code_lines
 
