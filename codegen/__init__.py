@@ -779,12 +779,13 @@ class BaseLangCodeWriter(wcodegen.BaseCodeWriter):
         def replace_specials(lines):
             return [functools.reduce(lambda s, r: s.replace(*r), specials, line) for line in lines]
 
-        if self._check_code_prop(obj, "extracode_pre"):
-            init = replace_specials(obj.properties["extracode_pre"].get_lines()) + init
-        if self._check_code_prop(obj, "extracode_post"):
-            init += replace_specials(obj.properties["extracode_post"].get_lines())
-        if self._check_code_prop(obj, "extraproperties"):  # insert these only after extracode_post
-            init += self.generate_code_extraproperties(obj)
+        if not self._check_code_prop(obj, "class") and not self._check_code_prop(obj, "custom_base"):
+            if self._check_code_prop(obj, "extracode_pre"):
+                init = replace_specials(obj.properties["extracode_pre"].get_lines()) + init
+            if self._check_code_prop(obj, "extracode_post"):
+                init += replace_specials(obj.properties["extracode_post"].get_lines())
+            if self._check_code_prop(obj, "extraproperties"):  # insert these only after extracode_post
+                init += self.generate_code_extraproperties(obj)
 
         if not obj.IS_SIZER and not obj.IS_CLASS:  # the object is a wxWindow instance
             mycn = getattr(builder, 'cn', self.cn)
